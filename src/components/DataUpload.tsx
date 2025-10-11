@@ -17,13 +17,13 @@ const DataUpload = () => {
     if (droppedFile && (droppedFile.name.endsWith('.csv') || droppedFile.name.endsWith('.xlsx'))) {
       setFile(droppedFile);
       toast({
-        title: "File uploaded",
-        description: `${droppedFile.name} is ready for processing`,
+        title: "Archivo subido",
+        description: `${droppedFile.name} está listo para procesar`,
       });
     } else {
       toast({
-        title: "Invalid file",
-        description: "Please upload a CSV or Excel file",
+        title: "Archivo inválido",
+        description: "Por favor sube un archivo CSV o Excel",
         variant: "destructive",
       });
     }
@@ -34,8 +34,8 @@ const DataUpload = () => {
     if (selectedFile) {
       setFile(selectedFile);
       toast({
-        title: "File uploaded",
-        description: `${selectedFile.name} is ready for processing`,
+        title: "Archivo subido",
+        description: `${selectedFile.name} está listo para procesar`,
       });
     }
   };
@@ -45,10 +45,10 @@ const DataUpload = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Upload className="w-5 h-5" />
-          Upload Your Dataset
+          Sube Tu Dataset
         </CardTitle>
         <CardDescription>
-          Upload CSV or Excel files to begin your analysis
+          Sube archivos CSV o Excel para comenzar tu análisis
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -86,10 +86,10 @@ const DataUpload = () => {
             <>
               <Upload className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
               <p className="text-lg font-medium mb-2">
-                Drag and drop your file here
+                Arrastra y suelta tu archivo aquí
               </p>
               <p className="text-muted-foreground mb-6">
-                or click to browse
+                o haz clic para buscar
               </p>
               <input
                 type="file"
@@ -100,7 +100,7 @@ const DataUpload = () => {
               />
               <label htmlFor="file-upload">
                 <Button variant="gradient" size="lg" asChild>
-                  <span>Choose File</span>
+                  <span>Elegir Archivo</span>
                 </Button>
               </label>
             </>

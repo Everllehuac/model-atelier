@@ -11,63 +11,63 @@ const DataCleaning = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="w-5 h-5" />
-          Data Cleaning
+          Limpieza de Datos
         </CardTitle>
         <CardDescription>
-          Configure data preprocessing operations
+          Configura las operaciones de preprocesamiento de datos
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label htmlFor="remove-nulls">Remove null values</Label>
+            <Label htmlFor="remove-nulls">Eliminar valores nulos</Label>
             <Switch id="remove-nulls" />
           </div>
           
           <div className="flex items-center justify-between">
-            <Label htmlFor="normalize">Normalize data</Label>
+            <Label htmlFor="normalize">Normalizar datos</Label>
             <Switch id="normalize" />
           </div>
           
           <div className="flex items-center justify-between">
-            <Label htmlFor="remove-duplicates">Remove duplicates</Label>
+            <Label htmlFor="remove-duplicates">Eliminar duplicados</Label>
             <Switch id="remove-duplicates" />
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label>Handle missing values</Label>
+          <Label>Manejar valores faltantes</Label>
           <Select>
             <SelectTrigger>
-              <SelectValue placeholder="Select method" />
+              <SelectValue placeholder="Seleccionar método" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="mean">Fill with mean</SelectItem>
-              <SelectItem value="median">Fill with median</SelectItem>
-              <SelectItem value="mode">Fill with mode</SelectItem>
-              <SelectItem value="forward">Forward fill</SelectItem>
-              <SelectItem value="remove">Remove rows</SelectItem>
+              <SelectItem value="mean">Rellenar con media</SelectItem>
+              <SelectItem value="median">Rellenar con mediana</SelectItem>
+              <SelectItem value="mode">Rellenar con moda</SelectItem>
+              <SelectItem value="forward">Rellenar hacia adelante</SelectItem>
+              <SelectItem value="remove">Eliminar filas</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label>Scaling method</Label>
+          <Label>Método de escalado</Label>
           <Select>
             <SelectTrigger>
-              <SelectValue placeholder="Select scaling" />
+              <SelectValue placeholder="Seleccionar escalado" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="standard">Standard scaling</SelectItem>
-              <SelectItem value="minmax">Min-Max scaling</SelectItem>
-              <SelectItem value="robust">Robust scaling</SelectItem>
-              <SelectItem value="none">No scaling</SelectItem>
+              <SelectItem value="standard">Escalado estándar</SelectItem>
+              <SelectItem value="minmax">Escalado Min-Max</SelectItem>
+              <SelectItem value="robust">Escalado robusto</SelectItem>
+              <SelectItem value="none">Sin escalado</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <Button variant="gradient" className="w-full" size="lg">
-          Apply Transformations
+          Aplicar Transformaciones
         </Button>
       </CardContent>
     </Card>

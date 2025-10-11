@@ -18,10 +18,10 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Complete ML Workflow
+              Flujo de Trabajo ML Completo
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Everything you need from data upload to model deployment
+              Todo lo que necesitas desde la carga de datos hasta el despliegue del modelo
             </p>
           </div>
 
@@ -29,35 +29,35 @@ const Index = () => {
             <FeatureCard
               icon={Upload}
               image={uploadIcon}
-              title="Easy Data Upload"
-              description="Upload CSV or Excel files with drag-and-drop support. Preview and select columns instantly."
+              title="Carga de Datos Fácil"
+              description="Sube archivos CSV o Excel con soporte de arrastrar y soltar. Vista previa y selección de columnas al instante."
             />
             <FeatureCard
               icon={Sparkles}
-              title="Smart Data Cleaning"
-              description="Automatically handle missing values, normalize data, and remove duplicates with one click."
+              title="Limpieza Inteligente de Datos"
+              description="Maneja automáticamente valores faltantes, normaliza datos y elimina duplicados con un clic."
             />
             <FeatureCard
               icon={Brain}
               image={trainingIcon}
-              title="Model Training"
-              description="Choose from 50+ algorithms including neural networks, random forests, and more."
+              title="Entrenamiento de Modelos"
+              description="Elige entre más de 50 algoritmos incluyendo redes neuronales, random forests y más."
             />
             <FeatureCard
               icon={BarChart3}
               image={resultsIcon}
-              title="Visual Analytics"
-              description="Real-time training metrics, accuracy plots, and comprehensive performance reports."
+              title="Análisis Visual"
+              description="Métricas de entrenamiento en tiempo real, gráficos de precisión e informes de rendimiento completos."
             />
             <FeatureCard
               icon={Database}
-              title="Database Integration"
-              description="Connect to external databases and pull data directly for seamless workflow."
+              title="Integración con Bases de Datos"
+              description="Conecta a bases de datos externas y extrae datos directamente para un flujo de trabajo sin interrupciones."
             />
             <FeatureCard
               icon={Zap}
-              title="Fast Processing"
-              description="Optimized algorithms ensure lightning-fast training even with large datasets."
+              title="Procesamiento Rápido"
+              description="Algoritmos optimizados aseguran un entrenamiento ultrarrápido incluso con grandes conjuntos de datos."
             />
           </div>
         </div>
@@ -68,10 +68,10 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Try It Now
+              Pruébalo Ahora
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Upload your data and start training models in minutes
+              Sube tus datos y comienza a entrenar modelos en minutos
             </p>
           </div>
 
@@ -85,18 +85,18 @@ const Index = () => {
               
               {/* Results Preview Card */}
               <div className="rounded-lg border bg-card p-8">
-                <h3 className="text-xl font-semibold mb-4">Training Results</h3>
+                <h3 className="text-xl font-semibold mb-4">Resultados del Entrenamiento</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-4 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Accuracy</span>
+                    <span className="text-muted-foreground">Precisión</span>
                     <span className="text-2xl font-bold text-success">94.2%</span>
                   </div>
                   <div className="flex justify-between items-center p-4 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Loss</span>
+                    <span className="text-muted-foreground">Pérdida</span>
                     <span className="text-2xl font-bold text-primary">0.058</span>
                   </div>
                   <div className="flex justify-between items-center p-4 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Training Time</span>
+                    <span className="text-muted-foreground">Tiempo de Entrenamiento</span>
                     <span className="text-2xl font-bold">2.3s</span>
                   </div>
                 </div>
@@ -111,10 +111,10 @@ const Index = () => {
         <div className="container mx-auto text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Build Your Next ML Project?
+              ¿Listo para Construir tu Próximo Proyecto ML?
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of data scientists and analysts using our platform
+              Únete a miles de científicos de datos y analistas que usan nuestra plataforma
             </p>
           </div>
         </div>
