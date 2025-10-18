@@ -1,1 +1,10 @@
 project_id = "pdyhlegzqlddwbswyacs"
+
+[functions.process-csv]
+verify_jwt = false
+
+[functions.clean-data]
+verify_jwt = false
+
+[functions.train-model]
+verify_jwt = false
