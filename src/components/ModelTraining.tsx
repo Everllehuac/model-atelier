@@ -1,11 +1,67 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Brain, Play } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
-const ModelTraining = () => {
+interface ModelTrainingProps {
+  data: Record<string, any>[];
+  headers: string[];
+  onTrainingComplete: (results: any) => void;
+}
+
+const ModelTraining = ({ data, headers, onTrainingComplete }: ModelTrainingProps) => {
+  const [targetColumn, setTargetColumn] = useState('');
+  const [featureColumn, setFeatureColumn] = useState('');
+  const [isTraining, setIsTraining] = useState(false);
+  const { toast } = useToast();
+
+  const handleTrain = async () => {
+    if (!targetColumn || !featureColumn) {
+      toast({
+        title: "Error",
+        description: "Selecciona columnas objetivo y características",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsTraining(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/train-model`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            data,
+            targetColumn,
+            featureColumns: [featureColumn]
+          })
+        }
+      );
+
+      if (!response.ok) throw new Error('Error al entrenar modelo');
+
+      const result = await response.json();
+      onTrainingComplete(result);
+      
+      toast({
+        title: "Modelo entrenado",
+        description: `R² = ${result.metrics.rSquared}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo entrenar el modelo",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTraining(false);
+    }
+  };
   return (
     <Card className="w-full">
       <CardHeader>
@@ -19,72 +75,51 @@ const ModelTraining = () => {
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label>Algoritmo</Label>
-          <Select>
+          <Label>Columna Objetivo (Y)</Label>
+          <Select value={targetColumn} onValueChange={setTargetColumn}>
             <SelectTrigger>
-              <SelectValue placeholder="Seleccionar algoritmo" />
+              <SelectValue placeholder="Seleccionar columna objetivo" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="linear">Regresión Lineal</SelectItem>
-              <SelectItem value="logistic">Regresión Logística</SelectItem>
-              <SelectItem value="rf">Random Forest</SelectItem>
-              <SelectItem value="svm">Máquina de Vector de Soporte</SelectItem>
-              <SelectItem value="nn">Red Neuronal</SelectItem>
-              <SelectItem value="xgboost">XGBoost</SelectItem>
+              {headers.map((header) => (
+                <SelectItem key={header} value={header}>{header}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="test-split">División de prueba (%)</Label>
-            <Input 
-              id="test-split" 
-              type="number" 
-              placeholder="20" 
-              min="10" 
-              max="50"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="epochs">Épocas</Label>
-            <Input 
-              id="epochs" 
-              type="number" 
-              placeholder="100" 
-              min="1"
-            />
-          </div>
-        </div>
-
         <div className="space-y-2">
-          <Label htmlFor="learning-rate">Tasa de aprendizaje</Label>
-          <Input 
-            id="learning-rate" 
-            type="number" 
-            placeholder="0.001" 
-            step="0.001"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Método de validación</Label>
-          <Select>
+          <Label>Columna Característica (X)</Label>
+          <Select value={featureColumn} onValueChange={setFeatureColumn}>
             <SelectTrigger>
-              <SelectValue placeholder="Seleccionar método" />
+              <SelectValue placeholder="Seleccionar característica" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="holdout">Validación Hold-out</SelectItem>
-              <SelectItem value="cv">Validación cruzada</SelectItem>
-              <SelectItem value="stratified">K-Fold estratificado</SelectItem>
+              {headers.map((header) => (
+                <SelectItem key={header} value={header}>{header}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
-        <Button variant="success" className="w-full" size="lg">
+        <div className="p-4 bg-accent/20 rounded-lg">
+          <p className="text-sm text-muted-foreground">
+            Algoritmo: <span className="font-semibold">Regresión Lineal</span>
+          </p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Ideal para relaciones lineales entre variables
+          </p>
+        </div>
+
+        <Button 
+          variant="success" 
+          className="w-full" 
+          size="lg"
+          onClick={handleTrain}
+          disabled={isTraining || data.length === 0}
+        >
           <Play className="w-5 h-5" />
-          Entrenar Modelo
+          {isTraining ? 'Entrenando...' : 'Entrenar Modelo'}
         </Button>
       </CardContent>
     </Card>

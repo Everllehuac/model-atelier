@@ -1,14 +1,36 @@
+import { useState } from "react";
 import Hero from "@/components/Hero";
 import FeatureCard from "@/components/FeatureCard";
 import DataUpload from "@/components/DataUpload";
+import DataTable from "@/components/DataTable";
 import DataCleaning from "@/components/DataCleaning";
 import ModelTraining from "@/components/ModelTraining";
+import ResultsView from "@/components/ResultsView";
 import { Upload, Sparkles, Brain, BarChart3, Database, Zap } from "lucide-react";
 import uploadIcon from "@/assets/upload-icon.jpg";
 import trainingIcon from "@/assets/training-icon.jpg";
 import resultsIcon from "@/assets/results-icon.jpg";
 
 const Index = () => {
+  const [rawData, setRawData] = useState<{ headers: string[]; data: Record<string, any>[] } | null>(null);
+  const [cleanedData, setCleanedData] = useState<Record<string, any>[] | null>(null);
+  const [trainingResults, setTrainingResults] = useState<any>(null);
+
+  const handleDataLoaded = (data: { headers: string[]; data: Record<string, any>[] }) => {
+    setRawData(data);
+    setCleanedData(null);
+    setTrainingResults(null);
+  };
+
+  const handleDataCleaned = (data: Record<string, any>[]) => {
+    setCleanedData(data);
+    setTrainingResults(null);
+  };
+
+  const handleTrainingComplete = (results: any) => {
+    setTrainingResults(results);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Hero />
@@ -63,10 +85,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Platform Demo Section */}
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
+      {/* Workflow Section */}
+      <section className="py-20 px-6 bg-muted/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Pruébalo Ahora
             </h2>
@@ -75,33 +97,31 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-            <div className="space-y-8">
-              <DataUpload />
-              <DataCleaning />
+          <div className="space-y-8">
+            <div className="grid md:grid-cols-3 gap-8">
+              <DataUpload onDataLoaded={handleDataLoaded} />
+              <DataCleaning 
+                data={rawData?.data || []} 
+                onDataCleaned={handleDataCleaned} 
+              />
+              <ModelTraining 
+                data={cleanedData || rawData?.data || []} 
+                headers={rawData?.headers || []}
+                onTrainingComplete={handleTrainingComplete}
+              />
             </div>
-            <div className="space-y-8">
-              <ModelTraining />
-              
-              {/* Results Preview Card */}
-              <div className="rounded-lg border bg-card p-8">
-                <h3 className="text-xl font-semibold mb-4">Resultados del Entrenamiento</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-4 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Precisión</span>
-                    <span className="text-2xl font-bold text-success">94.2%</span>
-                  </div>
-                  <div className="flex justify-between items-center p-4 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Pérdida</span>
-                    <span className="text-2xl font-bold text-primary">0.058</span>
-                  </div>
-                  <div className="flex justify-between items-center p-4 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Tiempo de Entrenamiento</span>
-                    <span className="text-2xl font-bold">2.3s</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+            {rawData && (
+              <DataTable headers={rawData.headers} data={cleanedData || rawData.data} />
+            )}
+
+            {trainingResults && (
+              <ResultsView 
+                metrics={trainingResults.metrics}
+                scatterData={trainingResults.scatterData}
+                barData={trainingResults.barData}
+              />
+            )}
           </div>
         </div>
       </section>

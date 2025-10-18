@@ -4,26 +4,62 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Upload, FileSpreadsheet, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const DataUpload = () => {
+interface DataUploadProps {
+  onDataLoaded: (data: { headers: string[]; data: Record<string, any>[] }) => void;
+}
+
+const DataUpload = ({ onDataLoaded }: DataUploadProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
+
+  const processFile = async (fileToProcess: File) => {
+    setIsProcessing(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', fileToProcess);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/process-csv`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      if (!response.ok) throw new Error('Error al procesar el archivo');
+
+      const result = await response.json();
+      onDataLoaded(result);
+      
+      toast({
+        title: "Archivo procesado",
+        description: `${result.rowCount} filas cargadas exitosamente`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo procesar el archivo",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
     
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && (droppedFile.name.endsWith('.csv') || droppedFile.name.endsWith('.xlsx'))) {
+    if (droppedFile && droppedFile.name.endsWith('.csv')) {
       setFile(droppedFile);
-      toast({
-        title: "Archivo subido",
-        description: `${droppedFile.name} está listo para procesar`,
-      });
+      processFile(droppedFile);
     } else {
       toast({
         title: "Archivo inválido",
-        description: "Por favor sube un archivo CSV o Excel",
+        description: "Por favor sube un archivo CSV",
         variant: "destructive",
       });
     }
@@ -33,10 +69,7 @@ const DataUpload = () => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-      toast({
-        title: "Archivo subido",
-        description: `${selectedFile.name} está listo para procesar`,
-      });
+      processFile(selectedFile);
     }
   };
 
@@ -93,14 +126,15 @@ const DataUpload = () => {
               </p>
               <input
                 type="file"
-                accept=".csv,.xlsx"
+                accept=".csv"
                 onChange={handleFileInput}
                 className="hidden"
                 id="file-upload"
+                disabled={isProcessing}
               />
               <label htmlFor="file-upload">
-                <Button variant="gradient" size="lg" asChild>
-                  <span>Elegir Archivo</span>
+                <Button variant="gradient" size="lg" asChild disabled={isProcessing}>
+                  <span>{isProcessing ? 'Procesando...' : 'Elegir Archivo'}</span>
                 </Button>
               </label>
             </>
