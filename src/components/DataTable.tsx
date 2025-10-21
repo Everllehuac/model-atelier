@@ -6,18 +6,20 @@ import { Database } from "lucide-react";
 interface DataTableProps {
   headers: string[];
   data: Record<string, any>[];
+  title?: string;
+  description?: string;
 }
 
-const DataTable = ({ headers, data }: DataTableProps) => {
+const DataTable = ({ headers, data, title = "Vista Previa de Datos", description }: DataTableProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Database className="w-5 h-5" />
-          Vista Previa de Datos
+          {title}
         </CardTitle>
         <CardDescription>
-          {data.length} filas × {headers.length} columnas
+          {description || `${data.length} filas × ${headers.length} columnas`}
         </CardDescription>
       </CardHeader>
       <CardContent>

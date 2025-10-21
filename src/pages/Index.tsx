@@ -114,7 +114,12 @@ const Index = () => {
 
             {rawData && (
               <>
-                <DataTable headers={rawData.headers} data={cleanedData || rawData.data} />
+                <div className="grid md:grid-cols-2 gap-8">
+                  <DataTable headers={rawData.headers} data={rawData.data} title="Vista Previa de Datos" description="Datos originales sin modificar" />
+                  {cleanedData && (
+                    <DataTable headers={rawData.headers} data={cleanedData} title="Datos Actualizados" description="Datos después de aplicar transformaciones" />
+                  )}
+                </div>
                 <DataStatistics 
                   headers={rawData.headers}
                   data={cleanedData || rawData.data}
