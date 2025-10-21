@@ -23,19 +23,29 @@ Deno.serve(async (req) => {
       throw new Error('El archivo está vacío');
     }
 
+    // Detectar delimitador (coma o tabulación)
+    const firstLine = lines[0];
+    const delimiter = firstLine.includes('\t') ? '\t' : ',';
+    
+    console.log('Delimitador detectado:', delimiter === '\t' ? 'TAB' : 'COMA');
+
     // Parse CSV
-    const headers = lines[0].split(',').map(h => h.trim());
+    const headers = lines[0].split(delimiter).map(h => h.trim().replace(/^"|"$/g, ''));
     const rows = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
+      const values = lines[i].split(delimiter).map(v => v.trim().replace(/^"|"$/g, ''));
       const row: Record<string, any> = {};
       
       headers.forEach((header, index) => {
         const value = values[index];
-        // Try to parse as number
-        const numValue = parseFloat(value);
-        row[header] = isNaN(numValue) ? value : numValue;
+        if (!value || value === '') {
+          row[header] = null;
+        } else {
+          // Try to parse as number
+          const numValue = parseFloat(value);
+          row[header] = isNaN(numValue) ? value : numValue;
+        }
       });
       
       rows.push(row);
