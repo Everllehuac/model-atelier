@@ -6,6 +6,7 @@ import DataTable from "@/components/DataTable";
 import DataCleaning from "@/components/DataCleaning";
 import ModelTraining from "@/components/ModelTraining";
 import ResultsView from "@/components/ResultsView";
+import DataStatistics from "@/components/DataStatistics";
 import { Upload, Sparkles, Brain, BarChart3, Database, Zap } from "lucide-react";
 import uploadIcon from "@/assets/upload-icon.jpg";
 import trainingIcon from "@/assets/training-icon.jpg";
@@ -112,7 +113,13 @@ const Index = () => {
             </div>
 
             {rawData && (
-              <DataTable headers={rawData.headers} data={cleanedData || rawData.data} />
+              <>
+                <DataTable headers={rawData.headers} data={cleanedData || rawData.data} />
+                <DataStatistics 
+                  headers={rawData.headers}
+                  data={cleanedData || rawData.data}
+                />
+              </>
             )}
 
             {trainingResults && (
