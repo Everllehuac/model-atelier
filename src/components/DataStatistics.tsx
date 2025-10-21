@@ -12,6 +12,26 @@ const DataStatistics = ({ data, headers }: DataStatisticsProps) => {
   const statistics = useMemo(() => {
     if (!data.length) return null;
 
+    const createHistogram = (values: number[], columnName: string) => {
+      const bins = 10;
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const binSize = (max - min) / bins;
+      
+      const histogram = Array(bins).fill(0).map((_, i) => ({
+        rango: `${(min + i * binSize).toFixed(1)}-${(min + (i + 1) * binSize).toFixed(1)}`,
+        frecuencia: 0,
+        inicio: min + i * binSize
+      }));
+
+      values.forEach(value => {
+        const binIndex = Math.min(Math.floor((value - min) / binSize), bins - 1);
+        histogram[binIndex].frecuencia++;
+      });
+
+      return histogram;
+    };
+
     const numericColumns = headers.filter(header => 
       typeof data[0][header] === 'number'
     );
@@ -55,26 +75,6 @@ const DataStatistics = ({ data, headers }: DataStatisticsProps) => {
 
     return { stats, histogramData, trendData, numericColumns };
   }, [data, headers]);
-
-  const createHistogram = (values: number[], columnName: string) => {
-    const bins = 10;
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    const binSize = (max - min) / bins;
-    
-    const histogram = Array(bins).fill(0).map((_, i) => ({
-      rango: `${(min + i * binSize).toFixed(1)}-${(min + (i + 1) * binSize).toFixed(1)}`,
-      frecuencia: 0,
-      inicio: min + i * binSize
-    }));
-
-    values.forEach(value => {
-      const binIndex = Math.min(Math.floor((value - min) / binSize), bins - 1);
-      histogram[binIndex].frecuencia++;
-    });
-
-    return histogram;
-  };
 
   if (!statistics || !data.length) {
     return (
