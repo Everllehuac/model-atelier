@@ -33,28 +33,38 @@ Deno.serve(async (req) => {
 
     // Handle missing values
     if (options.missingValueMethod && options.missingValueMethod !== 'remove') {
-      const numericColumns = Object.keys(cleanedData[0] || {}).filter(key => 
-        typeof cleanedData[0][key] === 'number'
-      );
+      if (options.missingValueMethod === 'na') {
+        // For NA, apply to all columns
+        const allColumns = Object.keys(cleanedData[0] || {});
+        allColumns.forEach(column => {
+          cleanedData = cleanedData.map(row => ({
+            ...row,
+            [column]: (row[column] === null || row[column] === undefined || row[column] === '') ? 'NA' : row[column]
+          }));
+        });
+      } else {
+        // For numeric methods (mean, median), only apply to numeric columns
+        const numericColumns = Object.keys(cleanedData[0] || {}).filter(key => 
+          typeof cleanedData[0][key] === 'number'
+        );
 
-      numericColumns.forEach(column => {
-        const values = cleanedData.map(row => row[column]).filter(v => v !== null && !isNaN(v));
-        
-        let fillValue: number | string = 0;
-        if (options.missingValueMethod === 'mean') {
-          fillValue = values.reduce((a, b) => a + b, 0) / values.length;
-        } else if (options.missingValueMethod === 'median') {
-          const sorted = [...values].sort((a, b) => a - b);
-          fillValue = sorted[Math.floor(sorted.length / 2)];
-        } else if (options.missingValueMethod === 'na') {
-          fillValue = 'NA';
-        }
+        numericColumns.forEach(column => {
+          const values = cleanedData.map(row => row[column]).filter(v => v !== null && !isNaN(v));
+          
+          let fillValue = 0;
+          if (options.missingValueMethod === 'mean') {
+            fillValue = values.reduce((a, b) => a + b, 0) / values.length;
+          } else if (options.missingValueMethod === 'median') {
+            const sorted = [...values].sort((a, b) => a - b);
+            fillValue = sorted[Math.floor(sorted.length / 2)];
+          }
 
-        cleanedData = cleanedData.map(row => ({
-          ...row,
-          [column]: row[column] === null || isNaN(row[column]) ? fillValue : row[column]
-        }));
-      });
+          cleanedData = cleanedData.map(row => ({
+            ...row,
+            [column]: row[column] === null || isNaN(row[column]) ? fillValue : row[column]
+          }));
+        });
+      }
     }
 
     // Normalize/Scale
