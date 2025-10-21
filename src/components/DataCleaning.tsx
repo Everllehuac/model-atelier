@@ -101,6 +101,7 @@ const DataCleaning = ({ data, onDataCleaned }: DataCleaningProps) => {
               <SelectItem value="median">Rellenar con mediana</SelectItem>
               <SelectItem value="mode">Rellenar con moda</SelectItem>
               <SelectItem value="forward">Rellenar hacia adelante</SelectItem>
+              <SelectItem value="na">Rellenar con NA</SelectItem>
               <SelectItem value="remove">Eliminar filas</SelectItem>
             </SelectContent>
           </Select>

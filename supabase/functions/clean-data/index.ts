@@ -40,12 +40,14 @@ Deno.serve(async (req) => {
       numericColumns.forEach(column => {
         const values = cleanedData.map(row => row[column]).filter(v => v !== null && !isNaN(v));
         
-        let fillValue = 0;
+        let fillValue: number | string = 0;
         if (options.missingValueMethod === 'mean') {
           fillValue = values.reduce((a, b) => a + b, 0) / values.length;
         } else if (options.missingValueMethod === 'median') {
           const sorted = [...values].sort((a, b) => a - b);
           fillValue = sorted[Math.floor(sorted.length / 2)];
+        } else if (options.missingValueMethod === 'na') {
+          fillValue = 'NA';
         }
 
         cleanedData = cleanedData.map(row => ({
